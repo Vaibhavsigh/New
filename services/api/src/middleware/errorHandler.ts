@@ -1,6 +1,5 @@
-import { Request, Response, NextFunction } from 'express';
-
 import { HTTP_STATUS, ERROR_MESSAGES } from '@monorepo/shared';
+import { Request, Response, NextFunction } from 'express';
 
 import logger from '../config/logger';
 

@@ -1,11 +1,11 @@
-import dotenv from 'dotenv';
+import { config } from 'dotenv';
 
 import app from './app';
 import { connectDatabase } from './config/database';
-import { connectRedis } from './config/redis';
 import logger from './config/logger';
+import { connectRedis } from './config/redis';
 
-dotenv.config();
+config();
 
 const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || '0.0.0.0';

@@ -1,6 +1,5 @@
-import { Router, Request, Response } from 'express';
-
 import { HTTP_STATUS } from '@monorepo/shared';
+import { Router, Request, Response } from 'express';
 
 const router = Router();
 

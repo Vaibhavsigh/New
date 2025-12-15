@@ -1,28 +1,25 @@
-import winston from 'winston';
+import { createLogger, format, transports } from 'winston';
 
 const logLevel = process.env.LOG_LEVEL || 'info';
 
-const logger = winston.createLogger({
+const logger = createLogger({
   level: logLevel,
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.errors({ stack: true }),
-    winston.format.json()
+  format: format.combine(
+    format.timestamp(),
+    format.errors({ stack: true }),
+    format.json()
   ),
   defaultMeta: { service: 'api' },
   transports: [
-    new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
-    new winston.transports.File({ filename: 'logs/combined.log' }),
+    new transports.File({ filename: 'logs/error.log', level: 'error' }),
+    new transports.File({ filename: 'logs/combined.log' }),
   ],
 });
 
 if (process.env.NODE_ENV !== 'production') {
   logger.add(
-    new winston.transports.Console({
-      format: winston.format.combine(
-        winston.format.colorize(),
-        winston.format.simple()
-      ),
+    new transports.Console({
+      format: format.combine(format.colorize(), format.simple()),
     })
   );
 }

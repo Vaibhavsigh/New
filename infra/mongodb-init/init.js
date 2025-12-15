@@ -1,3 +1,4 @@
+/* global db:writable, print */
 db = db.getSiblingDB('monorepo');
 
 db.createCollection('users');
