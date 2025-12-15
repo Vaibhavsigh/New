@@ -1,60 +1,28 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { queryClient } from './utils/queryClient';
+import { AppNavigator } from './navigation/AppNavigator';
+import { notificationService } from './services/notificationService';
+import { useEffect } from 'react';
+import { OfflineBanner } from './components/OfflineBanner';
 
-import { APP_NAME } from '@monorepo/shared';
+const App = () => {
+  useEffect(() => {
+    notificationService.requestUserPermission();
+    notificationService.getToken();
+    const unsubscribe = notificationService.listen();
+    return unsubscribe;
+  }, []);
 
-function App(): React.JSX.Element {
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
-      <ScrollView contentInsetAdjustmentBehavior="automatic">
-        <View style={styles.content}>
-          <Text style={styles.title}>{APP_NAME}</Text>
-          <Text style={styles.subtitle}>Mobile Application</Text>
-          <Text style={styles.description}>
-            This is a scaffolded React Native application ready for development.
-          </Text>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <SafeAreaProvider>
+      <QueryClientProvider client={queryClient}>
+        <OfflineBanner />
+        <AppNavigator />
+      </QueryClientProvider>
+    </SafeAreaProvider>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  content: {
-    padding: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  subtitle: {
-    fontSize: 20,
-    color: '#666',
-    marginBottom: 16,
-    textAlign: 'center',
-  },
-  description: {
-    fontSize: 16,
-    color: '#888',
-    textAlign: 'center',
-    lineHeight: 24,
-  },
-});
+};
 
 export default App;
