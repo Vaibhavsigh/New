@@ -1,0 +1,124 @@
+version: '3.8'
+
+services:
+  # MongoDB for data persistence
+  mongodb:
+    image: mongo:7.0
+    container_name: monorepo-mongodb
+    restart: unless-stopped
+    ports:
+      - '27017:27017'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: monorepo
+    volumes:
+      - mongodb_data:/data/db
+      - ./infra/mongodb-init:/docker-entrypoint-initdb.d
+    networks:
+      - monorepo-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis for caching and job queues
+  redis:
+    image: redis:7-alpine
+    container_name: monorepo-redis
+    restart: unless-stopped
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    networks:
+      - monorepo-network
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # LocalStack for AWS services (S3, SQS, etc.)
+  localstack:
+    image: localstack/localstack:latest
+    container_name: monorepo-localstack
+    restart: unless-stopped
+    ports:
+      - '4566:4566'
+      - '4571:4571'
+    environment:
+      SERVICES: s3,sqs,sns,dynamodb
+      DEBUG: 1
+      DATA_DIR: /tmp/localstack/data
+      DOCKER_HOST: unix:///var/run/docker.sock
+      AWS_DEFAULT_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+    volumes:
+      - localstack_data:/tmp/localstack
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./infra/localstack-init:/docker-entrypoint-initaws.d
+    networks:
+      - monorepo-network
+
+  # API Service (Node.js)
+  api:
+    build:
+      context: .
+      dockerfile: services/api/Dockerfile
+    container_name: monorepo-api
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    environment:
+      NODE_ENV: development
+      MONGO_URI: mongodb://admin:password@mongodb:27017/monorepo?authSource=admin
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      AWS_ENDPOINT_URL: http://localstack:4566
+    volumes:
+      - ./services/api:/app/services/api
+      - ./packages:/app/packages
+      - /app/node_modules
+      - /app/services/api/node_modules
+    depends_on:
+      - mongodb
+      - redis
+      - localstack
+    networks:
+      - monorepo-network
+    command: yarn workspace @monorepo/api dev
+
+  # Python Algorithm Service
+  algorithms:
+    build:
+      context: .
+      dockerfile: services/algorithms/Dockerfile
+    container_name: monorepo-algorithms
+    restart: unless-stopped
+    ports:
+      - '5000:5000'
+    environment:
+      FLASK_ENV: development
+      MONGO_URI: mongodb://admin:password@mongodb:27017/monorepo?authSource=admin
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    volumes:
+      - ./services/algorithms:/app/services/algorithms
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - monorepo-network
+    command: python -m flask run --host=0.0.0.0 --port=5000
+
+networks:
+  monorepo-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+  redis_data:
+  localstack_data:
