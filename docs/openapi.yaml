@@ -22,7 +22,7 @@ components:
           type: integer
         message:
           type: string
-    
+
     User:
       type: object
       properties:
@@ -34,7 +34,7 @@ components:
           type: array
           items:
             type: string
-    
+
     Profile:
       type: object
       properties:
@@ -48,7 +48,7 @@ components:
           type: string
         avatarUrl:
           type: string
-    
+
     Task:
       type: object
       properties:
@@ -61,7 +61,7 @@ components:
           enum: [active, archived]
         frequency:
           type: string
-    
+
     TaskProof:
       type: object
       properties:
@@ -71,7 +71,7 @@ components:
           type: string
         verified:
           type: boolean
-    
+
     Community:
       type: object
       properties:
@@ -108,7 +108,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-  
+
   /auth/login:
     post:
       summary: Login

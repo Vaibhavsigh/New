@@ -1,4 +1,3 @@
-
 ## ER Diagram
 
 ```mermaid
@@ -19,7 +18,7 @@ erDiagram
     Users ||--o{ FeedEntries : generates
     FeedEntries ||--o{ Comments : has
     Users ||--o{ Comments : writes
-    
+
     Users {
         ObjectId _id
         String email

@@ -23,7 +23,9 @@
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
     "docker:logs": "docker-compose logs -f",
-    "emulator": "firebase emulators:start"
+    "emulator": "firebase emulators:start",
+    "docs:build": "npx redoc-cli bundle docs/openapi.yaml -o docs/index.html",
+    "docs:serve": "npx redoc-cli serve docs/openapi.yaml"
   },
   "devDependencies": {
     "@types/jest": "^29.5.11",

@@ -3,12 +3,15 @@
 This document defines the input and output data schemas for the Python-based algorithm service, which handles complex logic for streaks, badges, and leaderboards.
 
 ## 1. Streak Calculation Service
+
 Calculates the current and longest streak for a user based on their activity history.
 
 ### Endpoint: `/algorithms/calculate-streak`
+
 **Method:** POST
 
 **Input (JSON):**
+
 ```json
 {
   "userId": "string",
@@ -24,6 +27,7 @@ Calculates the current and longest streak for a user based on their activity his
 ```
 
 **Output (JSON):**
+
 ```json
 {
   "userId": "string",
@@ -35,12 +39,15 @@ Calculates the current and longest streak for a user based on their activity his
 ```
 
 ## 2. Badge Evaluation Service
+
 Determines if a user has earned any new badges based on a recent event.
 
 ### Endpoint: `/algorithms/evaluate-badges`
+
 **Method:** POST
 
 **Input (JSON):**
+
 ```json
 {
   "userId": "string",
@@ -59,6 +66,7 @@ Determines if a user has earned any new badges based on a recent event.
 ```
 
 **Output (JSON):**
+
 ```json
 {
   "newlyAwardedBadges": [
@@ -72,12 +80,15 @@ Determines if a user has earned any new badges based on a recent event.
 ```
 
 ## 3. Leaderboard Snapshot Generation
+
 Aggregates points and ranks users for a specific period.
 
 ### Endpoint: `/algorithms/generate-leaderboard`
+
 **Method:** POST
 
 **Input (JSON):**
+
 ```json
 {
   "period": "weekly",
@@ -93,6 +104,7 @@ Aggregates points and ranks users for a specific period.
 ```
 
 **Output (JSON):**
+
 ```json
 {
   "rankings": [

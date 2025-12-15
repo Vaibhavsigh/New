@@ -44,12 +44,14 @@ This monorepo contains three main applications:
 ## Technology Stack
 
 ### Frontend (Mobile)
+
 - React Native
 - TypeScript
 - React Navigation
 - Axios for API calls
 
 ### Backend (API Service)
+
 - Node.js 18+
 - Express.js
 - TypeScript
@@ -59,6 +61,7 @@ This monorepo contains three main applications:
 - Winston for logging
 
 ### Backend (Algorithm Service)
+
 - Python 3.11+
 - Flask
 - NumPy/Pandas for data processing
@@ -67,6 +70,7 @@ This monorepo contains three main applications:
 - Redis for job queues
 
 ### Infrastructure
+
 - Docker & Docker Compose for local development
 - AWS ECS for container orchestration
 - AWS RDS/DocumentDB for MongoDB
@@ -76,6 +80,7 @@ This monorepo contains three main applications:
 - Terraform for IaC
 
 ### Development Tools
+
 - Yarn 3 workspaces for monorepo management
 - ESLint & Prettier for code quality
 - Jest for testing
@@ -85,12 +90,14 @@ This monorepo contains three main applications:
 ## Data Flow
 
 ### User Authentication
+
 1. User submits credentials to API service
 2. API validates against MongoDB
 3. JWT token is generated and returned
 4. Mobile app stores token and includes in subsequent requests
 
 ### Data Processing
+
 1. Mobile app sends data to API service
 2. API validates and stores in MongoDB
 3. API queues processing job in Redis

@@ -14,6 +14,7 @@ Thank you for your interest in contributing to this project!
 ### Code Style
 
 This project uses:
+
 - **ESLint** for JavaScript/TypeScript linting
 - **Prettier** for code formatting
 - **Black** and **Flake8** for Python code
@@ -54,6 +55,7 @@ footer
 ```
 
 **Types:**
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation changes
@@ -63,6 +65,7 @@ footer
 - `chore`: Maintenance tasks
 
 **Examples:**
+
 ```
 feat(api): add user authentication endpoint
 fix(mobile): resolve crash on app startup
@@ -72,11 +75,13 @@ docs(readme): update installation instructions
 ### Git Hooks
 
 Pre-commit hooks will automatically:
+
 - Lint staged files
 - Format code with Prettier
 - Check Python code with black and flake8
 
 Pre-push hooks will:
+
 - Run TypeScript type checking
 - Run all tests
 
@@ -92,18 +97,22 @@ Pre-push hooks will:
 
 ```markdown
 ## Description
+
 Brief description of changes
 
 ## Type of Change
+
 - [ ] Bug fix
 - [ ] New feature
 - [ ] Breaking change
 - [ ] Documentation update
 
 ## Testing
+
 Describe how you tested your changes
 
 ## Checklist
+
 - [ ] Code follows project style guidelines
 - [ ] Self-reviewed the code
 - [ ] Commented complex code sections
@@ -140,12 +149,14 @@ yarn workspaces foreach run <command>
 ## Adding Dependencies
 
 ### To a specific workspace:
+
 ```bash
 yarn workspace @monorepo/api add <package>
 yarn workspace @monorepo/api add -D <package>  # dev dependency
 ```
 
 ### To root:
+
 ```bash
 yarn add -W <package>
 ```
@@ -153,12 +164,14 @@ yarn add -W <package>
 ## Debugging
 
 ### API Service
+
 ```bash
 # Start with debugger
 yarn workspace @monorepo/api dev --inspect
 ```
 
 ### Python Service
+
 ```bash
 cd services/algorithms
 python -m pdb src/app.py
@@ -167,6 +180,7 @@ python -m pdb src/app.py
 ## Common Issues
 
 ### Yarn Install Fails
+
 ```bash
 yarn cache clean
 rm -rf node_modules
@@ -174,12 +188,14 @@ yarn install
 ```
 
 ### TypeScript Errors
+
 ```bash
 yarn workspace @monorepo/shared build
 yarn typecheck
 ```
 
 ### Tests Failing
+
 ```bash
 # Clear Jest cache
 yarn test --clearCache
@@ -189,6 +205,7 @@ yarn test
 ## Code Review Guidelines
 
 When reviewing PRs:
+
 - Check code quality and style
 - Verify tests are adequate
 - Ensure documentation is updated

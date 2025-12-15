@@ -64,6 +64,7 @@ This monorepo contains:
 - **Docker Compose**: >= 2.0
 
 ### Optional for Mobile Development
+
 - **Xcode**: Latest version (for iOS development)
 - **Android Studio**: Latest version (for Android development)
 - **CocoaPods**: Latest version (for iOS dependencies)
@@ -275,6 +276,7 @@ See [Infrastructure Documentation](./infra/docs/DEPLOYMENT.md) for detailed depl
 ### Quick Deploy
 
 #### Prerequisites
+
 - AWS CLI configured
 - Terraform installed
 - Docker installed
@@ -366,6 +368,7 @@ See `.env.example` for all required environment variables.
 ### Pre-commit Hooks
 
 Husky runs the following checks before each commit:
+
 - ESLint on staged files
 - Prettier formatting
 - Python black and flake8 (for .py files)
@@ -373,12 +376,14 @@ Husky runs the following checks before each commit:
 ### Pre-push Hooks
 
 Before pushing, Husky runs:
+
 - TypeScript type checking
 - All tests
 
 ### Commit Message Convention
 
 Follow conventional commits format:
+
 ```
 type(scope): subject
 
