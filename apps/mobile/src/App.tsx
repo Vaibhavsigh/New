@@ -1,3 +1,4 @@
+import { APP_NAME } from '@monorepo/shared';
 import React from 'react';
 import {
   SafeAreaView,
@@ -7,8 +8,6 @@ import {
   Text,
   View,
 } from 'react-native';
-
-import { APP_NAME } from '@monorepo/shared';
 
 function App(): React.JSX.Element {
   return (

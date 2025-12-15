@@ -1,7 +1,7 @@
-import express, { Application } from 'express';
 import cors from 'cors';
+import express, { Application, json, urlencoded } from 'express';
+import { rateLimit } from 'express-rate-limit';
 import helmet from 'helmet';
-import rateLimit from 'express-rate-limit';
 
 import { errorHandler } from './middleware/errorHandler';
 import { requestLogger } from './middleware/requestLogger';
@@ -11,8 +11,8 @@ const app: Application = express();
 
 app.use(helmet());
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(json());
+app.use(urlencoded({ extended: true }));
 
 const limiter = rateLimit({
   windowMs: Number(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000,

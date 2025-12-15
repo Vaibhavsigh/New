@@ -1,0 +1,408 @@
+openapi: 3.0.0
+info:
+  title: MVP API
+  description: API for the MVP application covering authentication, tasks, social, and gamification.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000/api/v1
+    description: Local Development Server
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        roles:
+          type: array
+          items:
+            type: string
+
+    Profile:
+      type: object
+      properties:
+        userId:
+          type: string
+        username:
+          type: string
+        displayName:
+          type: string
+        bio:
+          type: string
+        avatarUrl:
+          type: string
+
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        status:
+          type: string
+          enum: [active, archived]
+        frequency:
+          type: string
+
+    TaskProof:
+      type: object
+      properties:
+        id:
+          type: string
+        mediaUrl:
+          type: string
+        verified:
+          type: boolean
+
+    Community:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        membersCount:
+          type: integer
+
+security:
+  - bearerAuth: []
+
+paths:
+  /auth/register:
+    post:
+      summary: Register a new user
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '201':
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  /auth/login:
+    post:
+      summary: Login
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  user:
+                    $ref: '#/components/schemas/User'
+
+  /users/me/profile:
+    get:
+      summary: Get current user profile
+      responses:
+        '200':
+          description: Profile data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+    put:
+      summary: Update profile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Profile'
+      responses:
+        '200':
+          description: Updated profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+
+  /tasks:
+    get:
+      summary: List user tasks
+      responses:
+        '200':
+          description: List of tasks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+    post:
+      summary: Create a task
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        '201':
+          description: Task created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+
+  /tasks/{taskId}/proofs:
+    post:
+      summary: Upload proof for a task
+      description: Returns a presigned URL or handles upload
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                mediaType:
+                  type: string
+                  enum: [image, video]
+      responses:
+        '201':
+          description: Proof created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskProof'
+
+  /communities:
+    get:
+      summary: List communities
+      responses:
+        '200':
+          description: List of communities
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Community'
+    post:
+      summary: Create community
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+      responses:
+        '201':
+          description: Community created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Community'
+
+  /communities/{communityId}/join:
+    post:
+      summary: Join a community
+      parameters:
+        - name: communityId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Joined successfully
+
+  /gamification/leaderboard:
+    get:
+      summary: Get leaderboard
+      parameters:
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [global, community]
+        - name: period
+          in: query
+          schema:
+            type: string
+            enum: [weekly, monthly]
+      responses:
+        '200':
+          description: Leaderboard data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  rankings:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        username:
+                          type: string
+                        score:
+                          type: integer
+                        rank:
+                          type: integer
+
+  /notifications:
+    get:
+      summary: Get recent notifications
+      responses:
+        '200':
+          description: List of notifications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    title:
+                      type: string
+                    body:
+                      type: string
+                    read:
+                      type: boolean
+
+  /feed:
+    get:
+      summary: Get activity feed
+      responses:
+        '200':
+          description: Activity feed
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    type:
+                      type: string
+                    content:
+                      type: object
+
+  /feed/{feedEntryId}/comments:
+    get:
+      summary: Get comments for a feed entry
+      parameters:
+        - name: feedEntryId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of comments
+    post:
+      summary: Add a comment
+      parameters:
+        - name: feedEntryId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+      responses:
+        '201':
+          description: Comment created
+
+  /gamification/badges:
+    get:
+      summary: List all available badges
+      responses:
+        '200':
+          description: List of badges
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    description:
+                      type: string
+
+  /users/me/badges:
+    get:
+      summary: Get my earned badges
+      responses:
+        '200':
+          description: List of user badges
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    badgeId:
+                      type: string
+                    awardedAt:
+                      type: string

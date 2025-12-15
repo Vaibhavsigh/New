@@ -23,9 +23,12 @@
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
     "docker:logs": "docker-compose logs -f",
-    "emulator": "firebase emulators:start"
+    "emulator": "firebase emulators:start",
+    "docs:build": "redocly build-docs docs/openapi.yaml -o docs/index.html",
+    "docs:serve": "redocly preview-docs docs/openapi.yaml"
   },
   "devDependencies": {
+    "@redocly/cli": "^2.12.6",
     "@types/jest": "^29.5.11",
     "@types/node": "^20.10.6",
     "@typescript-eslint/eslint-plugin": "^6.17.0",
